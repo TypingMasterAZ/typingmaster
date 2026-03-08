@@ -401,9 +401,7 @@ h1{margin-right:30px;}
           </div>
         </div>
       </header>
- <div id="adminStats" style="display:block; margin:12px 0 0 0; font-weight:700; padding:10px 14px; border-radius:10px; background:rgba(255,255,255,0.06);">
-  👁️ Daxil olan istifadəçi sayı: <span id="visitorCount">0</span>
-</div>
+ 
 
       <div class="top-row">
         <div class="stats">
@@ -719,6 +717,7 @@ h1{margin-right:30px;}
       startTimer();
       renderResultList();
     }
+    
 
     function finishTest(){
   state.finished = true;
@@ -765,6 +764,15 @@ h1{margin-right:30px;}
     el('closeModal').addEventListener('click', closeModal);
 
     startTest();
+    if (typeof saveVisitorEntry === "function") {
+  saveVisitorEntry();
+} else {
+  window.addEventListener("load", () => {
+    if (typeof saveVisitorEntry === "function") {
+      saveVisitorEntry();
+    }
+  });
+}
 
     // Username show
     const savedEmail = localStorage.getItem("userEmail");
@@ -788,32 +796,9 @@ h1{margin-right:30px;}
     // =========================
     // SAYĞAC - yalnız sən gör
     // =========================
-    const adminStats = document.getElementById("adminStats");
-const visitorCount = document.getElementById("visitorCount");
-
-function updateVisitorCounter() {
-  try {
-    const totalKey = "typingmaster_home_total_visits";
-    const sessionKey = "typingmaster_home_session_counted";
-
-    let totalVisits = parseInt(localStorage.getItem(totalKey) || "0", 10);
-
-    if (!sessionStorage.getItem(sessionKey)) {
-      totalVisits++;
-      localStorage.setItem(totalKey, totalVisits);
-      sessionStorage.setItem(sessionKey, "1");
-    }
-
-    adminStats.style.display = "block";
-    visitorCount.textContent = totalVisits;
-  } catch (err) {
-    console.error("Sayğac xətası:", err);
-  }
-}
-
-updateVisitorCounter();
+   
   </script>
-  <script type="module">
+ <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -836,17 +821,39 @@ window.saveTypingResult = async function(correct, wrong, wpm) {
   try {
     const user = auth.currentUser;
 
-  await addDoc(collection(db, "results"), {
-  email: user?.email || localStorage.getItem("userEmail") || "anonim",
-  correct: correct,
-  wrong: wrong,
-  wpm: wpm,
-  createdAt: serverTimestamp()
-});
+    await addDoc(collection(db, "results"), {
+      email: user?.email || localStorage.getItem("userEmail") || "anonim",
+      correct: correct,
+      wrong: wrong,
+      wpm: wpm,
+      createdAt: serverTimestamp()
+    });
 
     console.log("✅ nəticə yazıldı");
   } catch (err) {
     console.error("❌ yazılmadı:", err);
+  }
+};
+
+window.saveVisitorEntry = async function() {
+  try {
+    const sessionKey = "typingmaster_visit_saved";
+
+    if (sessionStorage.getItem(sessionKey)) return;
+
+    const user = auth.currentUser;
+
+    await addDoc(collection(db, "visitors"), {
+      email: user?.email || localStorage.getItem("userEmail") || "anonim",
+      page: "home",
+      visitedAt: serverTimestamp(),
+      userAgent: navigator.userAgent
+    });
+
+    sessionStorage.setItem(sessionKey, "1");
+    console.log("✅ ziyarətçi Firestore-a yazıldı");
+  } catch (err) {
+    console.error("❌ ziyarətçi yazılmadı:", err);
   }
 };
 </script>
