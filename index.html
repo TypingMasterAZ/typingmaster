@@ -387,7 +387,7 @@ h1{margin-right:30px;}
             <a href="#" id="settingBtn">Parametrlər</a>
             <a href="telefon.html">Əlaqə</a>
 
-            
+          
 
             <div class="account-menu" id="accountMenu">
               <a href="qeydiyyat.html">Qeydiyyat</a>
@@ -401,6 +401,9 @@ h1{margin-right:30px;}
           </div>
         </div>
       </header>
+      <div id="adminStats" style="display:none; margin:12px 0 0 0; font-weight:700; padding:10px 14px; border-radius:10px; background:rgba(255,255,255,0.06);">
+  👁️ Daxil olan istifadəçi sayı: <span id="visitorCount">0</span>
+</div>
 
       <div class="top-row">
         <div class="stats">
@@ -781,36 +784,40 @@ h1{margin-right:30px;}
     // =========================
     // SAYĞAC - yalnız sən gör
     // =========================
-    // =========================
-// SAYĞAC - yalnız sən gör
-// =========================
-const ADMIN_EMAIL = "eltensabutov23@gmail.com";
-const adminStats = document.getElementById("adminStats");
-const visitorCount = document.getElementById("visitorCount");
+    const ADMIN_EMAIL = "eltensabutov23@gmail.com"; // öz emailini bura yaz
+    const adminStats = document.getElementById("adminStats");
+    const visitorCount = document.getElementById("visitorCount");
 
-function updateVisitorCounter() {
-  try {
-    const totalKey = "typingmaster_home_total_visits";
-    const sessionKey = "typingmaster_home_session_counted";
+    async function updateVisitorCounter() {
+      try {
+        // hər cihaz/session üçün bir dəfə artır
+        const sessionKey = "visitCounted_typingmaster_home";
+        if (!sessionStorage.getItem(sessionKey)) {
+          await fetch("https://api.countapi.xyz/hit/typingmaster.me/home", {
+            method: "GET",
+            cache: "no-store"
+          });
+          sessionStorage.setItem(sessionKey, "1");
+        }
 
-    let totalVisits = parseInt(localStorage.getItem(totalKey) || "0", 10);
+        // ümumi sayı al
+        const res = await fetch("https://api.countapi.xyz/get/typingmaster.me/home", {
+          method: "GET",
+          cache: "no-store"
+        });
+        const data = await res.json();
 
-    if (!sessionStorage.getItem(sessionKey)) {
-      totalVisits++;
-      localStorage.setItem(totalKey, totalVisits);
-      sessionStorage.setItem(sessionKey, "1");
+        // yalnız admin email olanda göstər
+        if (savedEmail && savedEmail.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+          adminStats.style.display = "block";
+          visitorCount.textContent = data.value || 0;
+        }
+      } catch (err) {
+        console.error("Sayğac xətası:", err);
+      }
     }
 
-    if (savedEmail && savedEmail.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-      adminStats.style.display = "block";
-      visitorCount.textContent = totalVisits;
-    }
-  } catch (err) {
-    console.error("Sayğac xətası:", err);
-  }
-}
-
-updateVisitorCounter();
+    updateVisitorCounter();
   </script>
 </body>
 </html>
