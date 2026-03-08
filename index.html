@@ -387,9 +387,7 @@ h1{margin-right:30px;}
             <a href="#" id="settingBtn">Parametrlər</a>
             <a href="telefon.html">Əlaqə</a>
 
-            <div id="adminStats" style="display:none; margin-top:10px; font-weight:600;">
-              👁️ Daxil olan istifadəçi sayı: <span id="visitorCount">0</span>
-            </div>
+            
 
             <div class="account-menu" id="accountMenu">
               <a href="qeydiyyat.html">Qeydiyyat</a>
@@ -783,40 +781,36 @@ h1{margin-right:30px;}
     // =========================
     // SAYĞAC - yalnız sən gör
     // =========================
-    const ADMIN_EMAIL = "eltensabutov23@gmail.com"; // öz emailini bura yaz
-    const adminStats = document.getElementById("adminStats");
-    const visitorCount = document.getElementById("visitorCount");
+    // =========================
+// SAYĞAC - yalnız sən gör
+// =========================
+const ADMIN_EMAIL = "eltensabutov23@gmail.com";
+const adminStats = document.getElementById("adminStats");
+const visitorCount = document.getElementById("visitorCount");
 
-    async function updateVisitorCounter() {
-      try {
-        // hər cihaz/session üçün bir dəfə artır
-        const sessionKey = "visitCounted_typingmaster_home";
-        if (!sessionStorage.getItem(sessionKey)) {
-          await fetch("https://api.countapi.xyz/hit/typingmaster.me/home", {
-            method: "GET",
-            cache: "no-store"
-          });
-          sessionStorage.setItem(sessionKey, "1");
-        }
+function updateVisitorCounter() {
+  try {
+    const totalKey = "typingmaster_home_total_visits";
+    const sessionKey = "typingmaster_home_session_counted";
 
-        // ümumi sayı al
-        const res = await fetch("https://api.countapi.xyz/get/typingmaster.me/home", {
-          method: "GET",
-          cache: "no-store"
-        });
-        const data = await res.json();
+    let totalVisits = parseInt(localStorage.getItem(totalKey) || "0", 10);
 
-        // yalnız admin email olanda göstər
-        if (savedEmail && savedEmail.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-          adminStats.style.display = "block";
-          visitorCount.textContent = data.value || 0;
-        }
-      } catch (err) {
-        console.error("Sayğac xətası:", err);
-      }
+    if (!sessionStorage.getItem(sessionKey)) {
+      totalVisits++;
+      localStorage.setItem(totalKey, totalVisits);
+      sessionStorage.setItem(sessionKey, "1");
     }
 
-    updateVisitorCounter();
+    if (savedEmail && savedEmail.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+      adminStats.style.display = "block";
+      visitorCount.textContent = totalVisits;
+    }
+  } catch (err) {
+    console.error("Sayğac xətası:", err);
+  }
+}
+
+updateVisitorCounter();
   </script>
 </body>
 </html>
