@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="az">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Haqqımızda — TypingMaster</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg1:#0f172a;
+      --bg2:#07103a;
+      --accent:#7c3aed;
+      --card:#0b1220;
+      --muted:rgba(255,255,255,0.6);
+      --glass:rgba(255,255,255,0.04);
+    }
+
+    * {box-sizing:border-box; font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial;}
+    html,body {margin:0; padding:0; height:100%;}
+    body {
+      background:linear-gradient(135deg,var(--bg1),var(--bg2));
+      color:#e6eef8;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      padding:40px 20px;
+    }
+    .container {
+      max-width:900px;
+      width:100%;
+    }
+    h1{
+        text-align: center;
+    }
+    .card {
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding:32px;
+      border-radius:20px;
+      box-shadow:0 10px 30px rgba(2,6,23,0.7);
+      backdrop-filter: blur(6px);
+    }
+    h1 {margin-top:0; font-size:28px; color:#fff;}
+    h2 {font-size:22px; margin-bottom:12px; color:var(--accent);}
+    p {line-height:1.6; color:var(--muted); margin-bottom:14px;}
+    ul {margin-left:20px; color:var(--muted);}
+    footer {margin-top:24px; text-align:center; font-size:13px; color:var(--muted);}
+    a {color:var(--accent); text-decoration:none;}
+    a:hover {text-decoration:underline;}
+
+    /* Sosial şəbəkələr */
+    .social-links {
+      display:flex;
+      justify-content:center;
+      gap:20px;
+      margin-top:20px;
+    }
+    .social-links a {
+      display:inline-block;
+      width:36px;
+      height:36px;
+      background:transparent;
+      transition: transform 0.2s;
+    }
+    .social-links a:hover {
+      transform: scale(1.2);
+    }
+    .social-links img {
+      width:100%;
+      height:100%;
+      object-fit:contain;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>Haqqımızda — TypingMaster</h1>
+      <p><strong>TypingMaster</strong> — sürətli yazma bacarıqlarınızı inkişaf etdirmək üçün yaradılmış interaktiv platformadır. Burada həm sözləri düzgün yazma sürətinizi ölçə bilər, həm də riyazi, dil və texnoloji mövzularda özünüzü sınaya bilərsiniz.</p>
+      
+      <h2>Yaradıcı</h2>
+      <p>Bu layihənin arxasında duran şəxs <strong>Eltən Şabutov</strong> dur. O, proqramlaşdırma və dizayn sahəsinə böyük maraq göstərir, təhsil texnologiyaları və sürətli yazma təcrübələri üzərində çalışır. Məqsədimiz istifadəçilərə həm əyləncəli, həm də öyrədici bir mühit təqdim etməkdir.</p>
+      
+      <h2>Missiyamız</h2>
+      <p>TypingMaster-in əsas məqsədi istifadəçilərə yazı sürətini artırmaq, düzgün yazma vərdişləri formalaşdırmaq və dil bacarıqlarını inkişaf etdirməkdir. Platforma həm yeni başlayanlar, həm də təcrübəli yazıcılar üçün optimallaşdırılıb.</p>
+      
+      <h2>Əlavə Funksiyalar</h2>
+      <ul>
+        <li>Real vaxt nəticə izləmə</li>
+        <li>Fərdi statistika və WPM (words per minute) hesabatı</li>
+        <li>İngilis və Azərbaycan dilində söz siyahıları</li>
+        <li>Sadə və göz oxşayan interfeys</li>
+      </ul>
+      
+      <h2>Əlaqə</h2>
+      <p>Siz bizimlə əlaqə saxlamaq və ya layihəyə təklif vermək istəyirsinizsə, <a href="mailto:typingmaster.az@gmail.com?subject=Sualınız&body=Salam, mən sizinlə əlaqə yaratmaq istəyirəm.">Bizimlə Əlaqə</a> ünvanına yaza bilərsiniz.</p>
+      
+      <!-- Sosial şəbəkələr -->
+      <div class="social-links">
+        <a href="https://www.instagram.com/typingmaster.az?igsh=MTBhdWthdnF1cXhidw==" target="_blank"><img src="https://img.icons8.com/ios-filled/50/ffffff/instagram-new.png" alt="Instagram"></a>
+        <a href="https://www.tiktok.com/@typingmaster.az?is_from_webapp=1&sender_device=pc" target="_blank"><img src="https://img.icons8.com/ios-filled/50/ffffff/tiktok.png" alt="TikTok"></a>
+        <a href="https://www.facebook.com/share/18HUKmcNTX/" target="_blank"><img src="https://img.icons8.com/ios-filled/50/ffffff/facebook-new.png" alt="Facebook"></a>
+        <a href="https://www.threads.com/@typingmaster.az" target="_blank"><img src="https://img.icons8.com/ios-filled/50/ffffff/threads.png" alt="Threads"></a>
+        
+      </div>
+
+      <footer>
+        © 2026 TypingMaster. Bütün hüquqlar qorunur.
+      </footer>
+    </div>
+  </div>
+  <script>
+    async function updateGlobalCounter() {
+    const name = "typingmaster haqqimizda"; // Saytın üçün unikal ad
+    try {
+        // Alternativ stabil API xidməti
+        const response = await fetch(`https://api.counterapi.dev/v1/${name}/visit/up`);
+        const data = await response.json();
+        
+        // Konsolu təmizləyirik ki, xətalar görünməsin
+        console.clear();
+        
+        // Məlumatı yalnız sən görəcəksən
+        console.log("%c TypingMaster Haqqimizda ADMIN PANEL ", "background: #39ff14; color: #000; font-weight: bold; padding: 5px;");
+        console.log("%c Ümumi Qlobal Ziyarətçi Sayı: " + data.count, "color: #39ff14; font-size: 14px;");
+    } catch (error) {
+        console.log("Statistika bazasına qoşulmaq mümkün olmadı.");
+    }
+}
+
+// Səhifə açılan kimi işə sal
+updateGlobalCounter();
+    // Sayğac funksiyası - Səhifə yüklənən kimi işə düşür
+(function() {
+    // 1. Mövcud sayı götür və ya 0-dan başla
+    let count = localStorage.getItem('my_private_counter') || 0;
+    
+    // 2. Sayı 1 vahid artır
+    count = parseInt(count) + 1;
+    
+    // 3. Yeni sayı yadda saxla
+    localStorage.setItem('my_private_counter', count);
+
+    // 4. Konsolu təmizlə və nəticəni göstər
+    console.clear(); // Köhnə xətaları gizlətmək üçün
+    console.log("%c OFFSIDE24 ADMIN PANEL ", "background: #39ff14; color: #000; padding: 5px; font-weight: bold; border-radius: 4px;");
+    console.log("%c Ümumi daxilolma sayı: " + count, "color: #39ff14; font-size: 14px; font-family: sans-serif;");
+})();
+  </script>
+</body>
+</html>

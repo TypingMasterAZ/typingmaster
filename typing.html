@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="az">
+<head>
+  <!-- AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5663281315926059"
+    crossorigin="anonymous"></script>
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <!-- Minimal SEO + Dil tanınması -->
+  <meta name="language" content="Azerbaijani">
+  <meta http-equiv="content-language" content="az">
+  <meta name="description" content="TypingMaster — klaviaturada sürətli və düzgün yazmağı öyrənmək üçün typing test. WPM ölç, səhvlərini gör və sürətini artır.">
+  <link rel="canonical" href="https://typingmaster.me/">
+
+  <!-- Search Console və indeks üçün əlavə SEO -->
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="googlebot" content="index, follow">
+  <meta name="author" content="TypingMaster">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <link rel="sitemap" type="application/xml" title="Sitemap" href="https://typingmaster.me/sitemap.xml">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="az_AZ">
+  <meta property="og:site_name" content="TypingMaster">
+  <meta property="og:title" content="TypingMaster — Sürətli yazma təcrübəsi">
+  <meta property="og:description" content="TypingMaster ilə sürətli və düzgün yazmağı öyrən, WPM ölç və nəticələrini yaxşılaşdır.">
+  <meta property="og:url" content="https://typingmaster.me/">
+  <meta property="og:image" content="https://i.postimg.cc/9Qy6YWFZ/Chat-GPT-Image-Nov-27-2025-09-35-45-PM.png">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="TypingMaster — Sürətli yazma təcrübəsi">
+  <meta name="twitter:description" content="TypingMaster ilə sürətli və düzgün yazmağı öyrən, WPM ölç və nəticələrini yaxşılaşdır.">
+  <meta name="twitter:image" content="https://i.postimg.cc/9Qy6YWFZ/Chat-GPT-Image-Nov-27-2025-09-35-45-PM.png">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebSite",
+    "name":"TypingMaster",
+    "url":"https://typingmaster.me/",
+    "inLanguage":"az",
+    "description":"TypingMaster klaviaturada sürətli və düzgün yazmağı öyrənmək üçün typing test platformasıdır."
+  }
+  </script>
+
+  <title>Söz Yazma Təcrübəsi — Super Dizayn</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{--bg1:#0f172a;--bg2:#07103a;--card:#0b1220;--accent:#7c3aed;--glass:rgba(255,255,255,0.04);--muted:rgba(255,255,255,0.6)}
+    *{box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
+
+    html,body{height:100%;margin:0}
+    body{
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));
+  color:#e6eef8;
+  display:flex;
+  justify-content:center;   /* yalnız üfüqi mərkəz */
+  padding:32px;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y:auto;          /* scroll olsun */
+  overflow-x:hidden;
+}
+
+    /* LIGHT MODE */
+    body.light {
+      --bg1: #f8fafc;
+      --bg2: #e5e7eb;
+      --card: #ffffff;
+      --accent: #7c3aed;
+      --glass: rgba(0,0,0,0.04);
+      --muted: rgba(0,0,0,0.6);
+      color: #0f172a;
+    }
+    body.light .card,
+    body.light .typing-area,
+    body.light .panel,
+    body.light .modal-card {
+      background: #ffffff !important;
+      color: #0f172a !important;
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+
+   .container{
+  width:100%;
+  max-width:980px;
+  margin:0 auto;   /* mərkəz */
+}
+    .card{
+      background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));
+      border-radius:18px;padding:28px;box-shadow:0 10px 30px rgba(2,6,23,0.7);backdrop-filter: blur(6px);
+    }
+
+header{
+  display:grid;
+  grid-template-columns: 56px 1fr auto; /* logo | başlıq | menyu */
+  align-items:center;
+  gap:18px;
+  margin-bottom:18px;
+}
+
+/* Başlıq həqiqi mərkəzdə olsun */
+header h1{
+  margin:0;
+  
+}
+h1{
+  margin:0;
+}
+/* Menyu sağda qalsın, amma “qaçmasın” */
+.account-wrapper{
+  margin-left:0 !important;  /* əvvəl verdiyin marginləri sıfırla */
+  justify-self:end;
+}
+    .logo {
+      width: 56px;height: 56px;display: flex;align-items: center;justify-content: center;
+      border-radius: 12px;overflow: hidden;background: none;
+    }
+    .logo img {width: 100%;height: 100%;object-fit: cover;}
+
+    h1{font-size:20px;margin:0}
+
+    .top-row{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-top:16px}
+    .stats{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .stat{background:var(--glass);padding:10px 12px;border-radius:10px;font-weight:600;font-size:13px}
+
+    .stage{display:grid;grid-template-columns:1fr 320px;gap:18px;margin-top:18px}
+
+    .typing-area{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)
+    }
+    .word-stream{min-height:140px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+    .word{padding:6px 10px;border-radius:8px;background:transparent;color:var(--muted);font-weight:600}
+    .word.past{opacity:0.5}
+    .word.current{background:linear-gradient(90deg, rgba(124,58,237,0.14), rgba(59,130,246,0.06));border:1px solid rgba(124,58,237,0.18);color:#fff}
+    .word.correct{background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.18);color:#bbf7d0}
+    .word.wrong{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.16);color:#ffd6d6}
+
+    .input-row{display:flex;gap:12px;margin-top:16px;align-items:center}
+    input[type=text]{
+      flex:1;padding:14px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.06);
+      background:transparent;color:inherit;font-size:16px;outline:none
+    }
+    .controls{display:flex;gap:8px}
+    button{background:var(--accent);border:none;color:white;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer}
+    button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:inherit}
+
+    .panel{
+      background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
+      padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)
+    }
+    .panel h3{margin:0 0 8px 0}
+    .list{max-height:240px;overflow:auto;padding-right:8px}
+    .list-item{display:flex;justify-content:space-between;padding:8px;border-radius:8px;margin-bottom:6px}
+    .list-item.correct{background:rgba(34,197,94,0.04)}
+    .list-item.wrong{background:rgba(239,68,68,0.04)}
+
+    .modal{
+      position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(180deg,rgba(2,6,23,0.6),rgba(2,6,23,0.8));backdrop-filter:blur(4px);
+      padding: 18px;
+    }
+    .modal-card{background:linear-gradient(180deg,#071127,#051028);padding:28px;border-radius:14px;max-width:720px;width:92%;color:#eaf2ff}
+
+    footer{margin-top:14px;color:var(--muted);font-size:13px}
+
+    @media(max-width:880px){
+      .stage{grid-template-columns:1fr}
+      .panel{order:2}
+    }
+
+.oyda{
+  display: contents;
+}
+
+.account-wrapper{
+  position: relative;
+  display:flex;
+  gap:18px;
+  align-items:center;
+
+  margin-left:40px;  /* ✅ yalnız aranı açır */
+}
+h1{margin-right:30px;}
+    .account-wrapper a{ text-decoration: none; color: #e6eef8; }
+    body.light .account-wrapper a{ color: #0f172a; }
+
+    .account-menu{
+      position: absolute;
+      top: 35px;
+      right: 0;
+      background: #0b1220;
+      border-radius: 12px;
+      padding: 8px;
+      width: 180px;
+      display: none;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      z-index: 999;
+    }
+    body.light .account-menu{ background:#fff; border:1px solid rgba(0,0,0,0.08); }
+
+    .account-menu a{
+      display: block;
+      padding: 10px;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 14px;
+      text-align: center;
+    }
+    body.light .account-menu a{ color:#0f172a; }
+    .account-menu a:hover{ background: rgba(255,255,255,0.08); }
+    body.light .account-menu a:hover{ background: rgba(0,0,0,0.06); }
+    .account-menu.active{ display:block; }
+
+    .settings-menu{
+      position: absolute;
+      top: 35px;
+      right: 0;
+      background: #0b1220;
+      border-radius: 12px;
+      padding: 8px;
+      width: 220px;
+      display: none;
+      flex-direction: column;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      z-index: 999;
+    }
+    body.light .settings-menu{ background:#fff; border:1px solid rgba(0,0,0,0.08); }
+    .settings-menu.active{ display:flex; gap: 5px; }
+
+    .settings-menu a{
+      text-decoration:none;
+      color:#eaf2ff;
+      font-size: 14px;
+      text-align: center;
+      display:block;
+      padding:10px 12px;
+      border-radius: 10px;
+    }
+    body.light .settings-menu a{ color:#0f172a; }
+    .settings-menu a:hover{ background: rgba(255,255,255,0.08); }
+    body.light .settings-menu a:hover{ background: rgba(0,0,0,0.06); }
+
+    .huquq{
+      margin-top: 18px;
+      text-align:center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .huquq a{ color: #7aa8ff; text-decoration: none; }
+    .huquq a:hover{ text-decoration: underline; }
+
+    /* ✅ Açılıb bağlanan kontent düyməsi */
+    .content-toggle{
+      width:100%;
+      margin-top:14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px 14px;
+      border-radius:12px;
+      background: rgba(124,58,237,0.14);
+      border: 1px solid rgba(124,58,237,0.22);
+      color:#fff;
+      font-weight:800;
+      cursor:pointer;
+    }
+    body.light .content-toggle{
+      color:#0f172a;
+      background: rgba(124,58,237,0.10);
+      border: 1px solid rgba(124,58,237,0.20);
+    }
+    .content-toggle span{ font-size:14px; }
+    .toggle-icon{
+      width:34px;height:34px;border-radius:10px;
+      display:flex;align-items:center;justify-content:center;
+      background: rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.06);
+      transition: transform .22s ease;
+    }
+    body.light .toggle-icon{
+      background: rgba(0,0,0,0.04);
+      border:1px solid rgba(0,0,0,0.06);
+    }
+    .content-toggle[aria-expanded="true"] .toggle-icon{
+      transform: rotate(180deg);
+    }
+
+    /* ✅ Kontent artıq səhifəni böL-məsin: modal kimi açılır */
+    .content-modal{
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(2,6,23,0.7);
+      backdrop-filter: blur(6px);
+      z-index: 2000;
+    }
+    .content-modal.active{ display:flex; }
+
+    .content-modal-card{
+      width: min(880px, 94vw);
+      max-height: 80vh;
+      overflow: auto;
+      border-radius: 16px;
+      padding: 18px 18px;
+      background: #0b1220;
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.55);
+      color: rgba(255,255,255,0.86);
+      line-height: 1.7;
+    }
+    body.light .content-modal-card{
+      background:#fff;
+      color: rgba(15,23,42,0.92);
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+
+    .content-modal-card h2{ margin: 0 0 8px 0; font-size: 18px; }
+    .content-modal-card h3{ margin: 14px 0 6px 0; font-size: 15px; }
+    .content-modal-card ul{ margin: 8px 0 0 18px; }
+
+    .content-modal-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom: 8px;
+    }
+    .content-close{
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.14);
+      color: inherit;
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    body.light .content-close{
+      border: 1px solid rgba(0,0,0,0.12);
+    }
+
+    /* scroll kilidi */
+    body.modal-open{
+      overflow: hidden;
+    }
+    /* ✅ Kənar reklam */
+.side-ad{
+  position:fixed;
+  top:120px;
+  right:18px;
+  width:160px;
+  z-index:999;
+}
+
+@media(max-width:1200px){
+  .side-ad{display:none;} /* mobilde gizlensin */
+}
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="card">
+      <header>
+        <div class="logo">
+          <img src="https://i.postimg.cc/9Qy6YWFZ/Chat-GPT-Image-Nov-27-2025-09-35-45-PM.png" alt="Logo">
+        </div>
+
+        <div class="oyda">
+          <h1>TypingMaster-Söz yazma təcrübəsi</h1>
+
+          <div class="account-wrapper">
+            <a href="#" id="accountBtn">Hesab</a>
+            <a href="#" id="settingBtn">Parametrlər</a>
+            <a href="telefon.html">Əlaqə</a>
+
+            <div id="adminStats" style="display:none; margin-top:10px; font-weight:600;">
+              👁️ Daxil olan istifadəçi sayı: <span id="visitorCount">0</span>
+            </div>
+
+            <div class="account-menu" id="accountMenu">
+              <a href="qeydiyyat.html">Qeydiyyat</a>
+              <a href="qeydiyyat.html" id="logoutMenutBtn">Hesabdan çıxış</a>
+              <a href="account.html">Hesab Məlumatları</a>
+            </div>
+
+            <div class="settings-menu" id="settingsMenu">
+              <a href="haqqimizda.html">Haqqımızda</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="top-row">
+        <div class="stats">
+          <div class="stat">Sözlər: <span id="totalWords">0</span></div>
+          <div class="stat">Düz: <span id="correctCount">0</span></div>
+          <div class="stat">Səhv: <span id="wrongCount">0</span></div>
+          <div class="stat">Vaxt: <span id="timer">00:00</span></div>
+        </div>
+
+        <div>
+          <label style="font-size:13px;color:var(--muted)">Söz sayı:</label>
+          <select id="wordCount" style="padding:8px;border-radius:8px;background:transparent;color:inherit;border:1px solid rgba(255,255,255,0.04);background-color: black;">
+            <option value="20">20</option>
+            <option value="30" selected>30</option>
+            <option value="40">40</option>
+            
+          </select>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="typing-area">
+          <div class="word-stream" id="wordStream" aria-hidden="false"></div>
+
+          <div class="input-row">
+            <input type="text" id="typingInput" placeholder="İndi yazmağa başla..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+            <div class="controls">
+              <button id="startBtn">Başla</button>
+              <button class="ghost" id="resetBtn">Sıfırla</button>
+            </div>
+          </div>
+
+          <footer>
+            İstifadə qaydası: Sözləri yazıb arada boşluq (space) ilə irəlilə. Hər söz üçün hərf-ə-hərf yoxlanacaq. Sonda nəticələr çıxacaq.
+          </footer>
+
+          <!-- ✅ DÜYMƏ (kontenti modalda açır, üst hissə itmir) -->
+          <button class="content-toggle" id="contentToggle" aria-haspopup="dialog" aria-controls="contentModal">
+            <span>TypingMaster haqqında məlumat</span>
+            <div class="toggle-icon">⌄</div>
+          </button>
+        </div>
+
+        <aside class="panel">
+          <h3>Nəticələr (canlı)</h3>
+          <div class="list" id="resultList"></div>
+          <hr style="opacity:0.06;border:none;height:1px;margin:12px 0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.03),transparent)">
+          <div style="display:flex;gap:8px;align-items:center;justify-content:flex-end">
+            <strong id="wpm">0 WPM</strong>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ KONTENT MODAL (səhifə yarı bölünmür, yuxarı hissə itmir) -->
+  <div class="content-modal" id="contentModal" role="dialog" aria-modal="true" aria-label="TypingMaster haqqında məlumat">
+    <div class="content-modal-card">
+      <div class="content-modal-top">
+        <strong style="opacity:.9">Məlumat</strong>
+        <button class="content-close" id="contentClose">Bağla ✕</button>
+      </div>
+
+      <h2>TypingMaster nədir?</h2>
+      <p>
+        TypingMaster klaviaturada daha sürətli və düzgün yazmağı öyrənmək üçün hazırlanmış onlayn yazı məşqi platformasıdır.
+        Bu səhifədə siz söz yazma testi edərək yazı sürətinizi ölçə, səhvlərinizi görə və gündəlik məşqlə nəticələrinizi yaxşılaşdıra bilərsiniz.
+      </p>
+
+      <h3>WPM nədir?</h3>
+      <p>
+        WPM (Words Per Minute) — 1 dəqiqədə neçə söz yaza bildiyinizi göstərən göstəricidir. Orta yazı sürəti təxminən 35–45 WPM sayılır.
+        Mütəmadi məşq etdikdə 60–80 WPM və daha yüksək nəticələr əldə etmək mümkündür.
+      </p>
+
+      <h3>Necə daha sürətli yazmaq olar?</h3>
+      <ul>
+        <li>Hər gün 5–10 dəqiqə məşq edin.</li>
+        <li>Barmaqların düzgün yerləşməsinə (klaviatura mövqeyi) diqqət edin.</li>
+        <li>Sürətdən çox düzgünlüyə fokuslanın, sonra sürət özü artacaq.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- modal (nəticələr) -->
+  <div id="modal" style="display:none" class="modal" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <h2>Nəticələr</h2>
+      <p style="margin:4px 0 0 0;color:var(--muted)">Aşağıda sənin performansın göstərilir.</p>
+      <div style="margin-top:14px;overflow:auto;max-height:260px;padding-right:8px" id="detailedResults"></div>
+      <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end">
+        <button id="closeModal">Yenidən</button>
+      </div>
+    </div>
+  </div>
+  
+
+  <div class="huquq">
+    © 2025 TypingMaster. Bütün hüquqlar qorunur.
+    <a href="privacy.html">Məxfilik Siyasəti və Haqqımızda</a>
+  </div>
+  <!-- ✅ Sağ kənar reklam -->
+<div class="side-ad">
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-5663281315926059"
+       data-ad-slot="BURAYA_SLOT_ID"
+       data-ad-format="vertical"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</div>
+
+  <script>
+    const WORDS = (`salam salamlar komputer kitab internet proqramlaşdırma javascript html css dizayn sürət təcrübə yazmaq düzgün səhv oyun funksiya dəyişən massiv düzbucaqlı tənlik riyaziyyat tarix coğrafiya elm musiqi film sosial media kitabxana universitet alma bal su qapı pəncərə kitab çanta dost yol işıq ev oyun yaz gül dərs telefon kompüter şəkil masa saat məktəb müəllim təcrübə dəftər`).split(' ');
+    const el = id => document.getElementById(id);
+
+    // Menyular
+    const accountBtn = document.getElementById("accountBtn");
+    const accountMenu = document.getElementById("accountMenu");
+    const settingBtn = document.getElementById("settingBtn");
+    const settingsMenu = document.getElementById("settingsMenu");
+
+    accountBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      accountMenu.classList.toggle("active");
+    });
+    settingBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      settingsMenu.classList.toggle("active");
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".account-wrapper") && !e.target.closest("#accountMenu")) {
+        accountMenu.classList.remove("active");
+      }
+      if (!e.target.closest("#settingBtn") && !e.target.closest("#settingsMenu")) {
+        settingsMenu.classList.remove("active");
+      }
+    });
+
+    // ✅ Kontent modal aç/bağla
+    const contentToggle = document.getElementById("contentToggle");
+    const contentModal = document.getElementById("contentModal");
+    const contentClose = document.getElementById("contentClose");
+
+    function openContentModal(){
+      contentModal.classList.add("active");
+      document.body.classList.add("modal-open");
+      // fokus
+      contentClose.focus();
+    }
+    function closeContentModal(){
+      contentModal.classList.remove("active");
+      document.body.classList.remove("modal-open");
+      contentToggle.focus();
+    }
+
+    contentToggle.addEventListener("click", () => openContentModal());
+    contentClose.addEventListener("click", () => closeContentModal());
+    contentModal.addEventListener("click", (e) => {
+      if (e.target === contentModal) closeContentModal();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && contentModal.classList.contains("active")) {
+        closeContentModal();
+      }
+    });
+
+    // State
+    let settings = { count: parseInt(el('wordCount')?.value || 30) };
+    let state = {
+      words: [],
+      index: 0,
+      correct: 0,
+      wrong: 0,
+      startTime: null,
+      finished: false,
+      perWord: []
+    };
+    let timerInterval = null;
+
+    function pickWords(n){
+      let pool = [...WORDS];
+      for(let i = pool.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+      }
+      return pool.slice(0, n);
+    }
+
+    function renderStream(){
+      const stream = el('wordStream');
+      stream.innerHTML = '';
+
+      state.words.forEach((w,i)=>{
+        const span = document.createElement('div');
+        span.className = 'word';
+
+        if(i < state.index) span.classList.add('past');
+        if(i === state.index) span.classList.add('current');
+        if(state.perWord[i]) span.classList.add(state.perWord[i].correct ? 'correct' : 'wrong');
+
+        if(i === state.index){
+          const typed = el('typingInput').value;
+          for(let k=0;k<w.length;k++){
+            const ch = document.createElement('span');
+            ch.textContent = w[k];
+            if(k < typed.length && typed[k] !== w[k]) ch.style.color = '#ffb4b4';
+            span.appendChild(ch);
+          }
+        } else {
+          span.textContent = w;
+        }
+        stream.appendChild(span);
+      });
+    }
+
+    function calcWPM(){
+      if(!state.startTime) return 0;
+      const minutes = (Date.now() - state.startTime) / 60000;
+      return minutes ? Math.round(state.index / minutes) : 0;
+    }
+
+    function updateStats(){
+      el('totalWords').textContent = state.words.length;
+      el('correctCount').textContent = state.correct;
+      el('wrongCount').textContent = state.wrong;
+      el('wpm').textContent = calcWPM() + ' WPM';
+    }
+
+    function startTimer(){
+      clearInterval(timerInterval);
+      state.startTime = Date.now();
+      timerInterval = setInterval(()=>{
+        const sec = Math.floor((Date.now()-state.startTime)/1000);
+        el('timer').textContent =
+          String(Math.floor(sec/60)).padStart(2,'0') + ':' +
+          String(sec%60).padStart(2,'0');
+        el('wpm').textContent = calcWPM() + ' WPM';
+      },500);
+    }
+    function stopTimer(){ clearInterval(timerInterval); }
+
+    function renderResultList(){
+      const list = el('resultList');
+      list.innerHTML = '';
+      state.words.forEach((w,i)=>{
+        const div = document.createElement('div');
+        div.className = 'list-item ' + (state.perWord[i]?.correct ? 'correct' : state.perWord[i] ? 'wrong' : '');
+        div.innerHTML = `<div>${i+1}. ${w}</div><div>${state.perWord[i] ? (state.perWord[i].correct?'✔':'✖'):'—'}</div>`;
+        list.appendChild(div);
+      });
+    }
+
+    function showModal(){ el('modal').style.display = 'flex'; }
+    function closeModal(){ el('modal').style.display = 'none'; startTest(); }
+
+    function renderDetailedResults(){
+      const box = document.getElementById("detailedResults");
+      box.innerHTML = "";
+
+      state.perWord.forEach((item, i) => {
+        if (!item) return;
+        const row = document.createElement("div");
+        row.style.display = "flex";
+        row.style.justifyContent = "space-between";
+        row.style.alignItems = "center";
+        row.style.padding = "8px 10px";
+        row.style.marginBottom = "6px";
+        row.style.borderRadius = "8px";
+        row.style.fontSize = "14px";
+
+        if (item.correct) {
+          row.style.background = "rgba(34,197,94,0.12)";
+          row.innerHTML = `<span>${i+1}. ${item.word}</span><strong style="color:#22c55e">✔ düzgün</strong>`;
+        } else {
+          row.style.background = "rgba(239,68,68,0.12)";
+          row.innerHTML = `<span>${i+1}. ${item.word}</span><strong style="color:#ef4444">✖ səhv</strong>`;
+        }
+        box.appendChild(row);
+      });
+
+      const summary = document.createElement("div");
+      summary.style.marginTop = "12px";
+      summary.style.paddingTop = "10px";
+      summary.style.borderTop = "1px solid rgba(255,255,255,0.08)";
+      summary.style.display = "flex";
+      summary.style.justifyContent = "space-between";
+      summary.style.fontWeight = "700";
+      summary.innerHTML = `
+        <span style="color:#22c55e">✔ Düzgün: ${state.correct}</span>
+        <span style="color:#ef4444">✖ Səhv: ${state.wrong}</span>
+      `;
+      box.appendChild(summary);
+    }
+
+    function startTest(){
+      settings.count = parseInt(el('wordCount').value);
+      state.words = pickWords(settings.count);
+      state.index = 0;
+      state.correct = 0;
+      state.wrong = 0;
+      state.perWord = [];
+      state.finished = false;
+
+      el('typingInput').value = '';
+      el('typingInput').disabled = false;
+      el('typingInput').focus();
+
+      renderStream();
+      updateStats();
+      startTimer();
+      renderResultList();
+    }
+
+    function finishTest(){
+      state.finished = true;
+      el('typingInput').disabled = true;
+      stopTimer();
+      renderDetailedResults();
+      showModal();
+    }
+
+    function handleInput(e){
+      if(state.finished) return;
+
+      if(e.target.value.endsWith(' ')){
+        const typed = e.target.value.trim();
+        const word = state.words[state.index];
+        const correct = typed === word;
+
+        state.perWord[state.index] = {word, typed, correct};
+        correct ? state.correct++ : state.wrong++;
+        state.index++;
+
+        e.target.value = '';
+
+        if(state.index >= state.words.length){
+          finishTest();
+        }
+
+        renderStream();
+        updateStats();
+        renderResultList();
+      } else {
+        renderStream();
+      }
+    }
+
+    el('typingInput').addEventListener('input', handleInput);
+    el('startBtn').addEventListener('click', startTest);
+    el('resetBtn').addEventListener('click', startTest);
+    el('wordCount').addEventListener('change', startTest);
+    el('closeModal').addEventListener('click', closeModal);
+
+    startTest();
+
+    // Username show
+    const savedEmail = localStorage.getItem("userEmail");
+    const registerLink = document.querySelector('#accountMenu a[href*="qeydiyyat"]');
+    if (savedEmail) {
+      const username = savedEmail.split("@")[0];
+      accountBtn.textContent = username;
+      if (registerLink) registerLink.style.display = "none";
+    }
+
+    // Logout
+    const logoutBtn = document.getElementById("logoutMenutBtn");
+    logoutBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      localStorage.removeItem("userEmail");
+      localStorage.removeItem("theme");
+      localStorage.removeItem("username");
+      window.location.href = "qeydiyyat.html";
+    });
+
+    // =========================
+    // SAYĞAC - yalnız sən gör
+    // =========================
+    const ADMIN_EMAIL = "eltensabutov23@gmail.com"; // öz emailini bura yaz
+    const adminStats = document.getElementById("adminStats");
+    const visitorCount = document.getElementById("visitorCount");
+
+    async function updateVisitorCounter() {
+      try {
+        // hər cihaz/session üçün bir dəfə artır
+        const sessionKey = "visitCounted_typingmaster_home";
+        if (!sessionStorage.getItem(sessionKey)) {
+          await fetch("https://api.countapi.xyz/hit/typingmaster.me/home", {
+            method: "GET",
+            cache: "no-store"
+          });
+          sessionStorage.setItem(sessionKey, "1");
+        }
+
+        // ümumi sayı al
+        const res = await fetch("https://api.countapi.xyz/get/typingmaster.me/home", {
+          method: "GET",
+          cache: "no-store"
+        });
+        const data = await res.json();
+
+        // yalnız admin email olanda göstər
+        if (savedEmail && savedEmail.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+          adminStats.style.display = "block";
+          visitorCount.textContent = data.value || 0;
+        }
+      } catch (err) {
+        console.error("Sayğac xətası:", err);
+      }
+    }
+
+    updateVisitorCounter();
+  </script>
+</body>
+</html>

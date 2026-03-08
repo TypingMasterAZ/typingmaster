@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daxil ol (OTP)</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+body{margin:0;font-family:'Poppins',sans-serif;background:#f0f0f0;display:flex;overflow:hidden}
+.email{background:yellowgreen;width:400px;padding:40px;color:#fff;text-align:center;display:flex;flex-direction:column;justify-content:center;gap:20px}
+.picture img{width:100%;height:110vh;object-fit:cover}
+button{margin-top:20px;height:50px;width:150px;border-radius:23px;font-size:18px;cursor:pointer;transition:.3s ease;box-shadow:0 8px 20px rgba(66,133,244,.3);border:none}
+button:hover{background:green;color:#fff;transform:scale(1.05)}
+.basliq{background:brown;height:100px;width:400px;text-align:center;border-radius:50px;display:flex;flex-direction:column;justify-content:center}
+#otpMessage{margin-top:10px;font-size:18px;font-weight:600;display:none}
+#codeSection{display:none}
+#timerText{margin-top:15px;font-size:18px;font-weight:600}
+.resend-text{cursor:pointer;display:none}
+#emailInput{border-radius:20px;width:80%;padding:10px;font-size:16px;border:3px solid #4285f4;margin-top:20px;height:30px;box-shadow:0 0 0 5px rgba(56,133,244,.25);outline:none}
+.otp-box{display:flex;justify-content:center;gap:10px;margin-top:20px}
+.otp-input{width:55px;height:55px;border-radius:16px;text-align:center;font-size:24px;font-weight:700;border:3px solid #4285f4;box-shadow:0 0 0 5px rgba(56,133,244,.25);outline:none}
+</style>
+</head>
+<body>
+
+<div class="email">
+  <div class="basliq">
+    <h3 style="margin:0;font-style:italic;">TypingMaster</h3>
+    <h5 style="margin:0;">"Typing Skills Just Got Better"</h5>
+  </div>
+
+  <div id="emailSection">
+    <h2 style="margin:0;">Emailinizi daxil edin:</h2>
+    <input type="email" id="emailInput" placeholder="Emailinizi daxil edin">
+    <button id="sendCodeBtn">Kodu Göndər</button>
+  </div>
+
+  <div id="otpMessage">OTP kod göndərildi ✔</div>
+
+  <div id="codeSection">
+    <h2 style="margin:0;">OTP Kodunu daxil edin:</h2>
+
+    <div class="otp-box">
+      <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
+      <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
+      <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
+      <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
+    </div>
+
+    <div id="timerText"></div>
+
+    <button id="verifyBtn">Daxil ol</button>
+    <div class="resend-text" id="resendCode"><h4 style="margin:0;">Kodu yenidən göndər</h4></div>
+  </div>
+</div>
+
+<div class="picture">
+  <img src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=1000&auto=format&fit=crop&q=60" alt="">
+</div>
+
+<!-- EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js";
+import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-firestore.js";
+
+// ✅ YENİ Firebase (salam-58d0a)
+const firebaseConfig = {
+  apiKey: "AIzaSyCYWC8P0meXFbyRoSA4uHkJmJRkPFlhwSQ",
+  authDomain: "salam-58d0a.firebaseapp.com",
+  projectId: "salam-58d0a",
+  storageBucket: "salam-58d0a.firebasestorage.app",
+  messagingSenderId: "703442504339",
+  appId: "1:703442504339:web:f9a6b1f54db80c4c829b66"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// ✅ EmailJS init (səndəki kimi)
+emailjs.init("57Dy9aY2JxE2QQ9dL");
+const serviceID = "service_v54lvys";
+const templateID = "template_fcigrcp";
+
+let generatedCode = "";
+let otpExpireTime = 0;
+let timerInterval = null;
+
+const emailInput = document.getElementById("emailInput");
+const sendBtn = document.getElementById("sendCodeBtn");
+const verifyBtn = document.getElementById("verifyBtn");
+const resendBtn = document.getElementById("resendCode");
+const emailSection = document.getElementById("emailSection");
+const codeSection = document.getElementById("codeSection");
+const otpMessage = document.getElementById("otpMessage");
+const timerText = document.getElementById("timerText");
+const otpInputs = [...document.querySelectorAll(".otp-input")];
+
+function setSendState(disabled, text){
+  sendBtn.disabled = disabled;
+  sendBtn.style.opacity = disabled ? "0.7" : "1";
+  if(text) sendBtn.textContent = text;
+}
+
+function startOtpTimer() {
+  if (timerInterval) clearInterval(timerInterval);
+
+  timerInterval = setInterval(() => {
+    const remaining = otpExpireTime - Date.now();
+    if (remaining <= 0) {
+      clearInterval(timerInterval);
+      timerText.innerText = "⛔ Vaxt bitdi!";
+      otpInputs.forEach(i => i.disabled = true);
+      verifyBtn.disabled = true;
+      resendBtn.style.display = "block";
+      return;
+    }
+    const m = Math.floor(remaining / 60000);
+    const s = Math.floor((remaining % 60000) / 1000);
+    timerText.innerText = `⏳ ${m}:${s.toString().padStart(2, "0")}`;
+  }, 1000);
+}
+
+// ✅ OTP auto-keçid + yalnız rəqəm
+document.addEventListener("input", (e) => {
+  if (!e.target.classList.contains("otp-input")) return;
+  e.target.value = e.target.value.replace(/\D/g, "");
+  const idx = otpInputs.indexOf(e.target);
+  if (e.target.value && idx < otpInputs.length - 1) otpInputs[idx + 1].focus();
+});
+document.addEventListener("keydown", (e) => {
+  if (!e.target.classList.contains("otp-input")) return;
+  const idx = otpInputs.indexOf(e.target);
+  if (e.key === "Backspace" && !e.target.value && idx > 0) otpInputs[idx - 1].focus();
+});
+
+async function sendOtp(email){
+  generatedCode = Math.floor(1000 + Math.random() * 9000).toString();
+
+  await emailjs.send(serviceID, templateID, {
+    email,
+    passcode: generatedCode,
+    time: "1 dəq"
+  });
+
+  otpExpireTime = Date.now() + 60 * 1000;
+  otpInputs.forEach(i => { i.value = ""; i.disabled = false; });
+  verifyBtn.disabled = false;
+  resendBtn.style.display = "none";
+  startOtpTimer();
+
+  emailSection.style.display = "none";
+  codeSection.style.display = "block";
+  otpMessage.style.display = "block";
+  setTimeout(() => otpInputs[0].focus(), 100);
+}
+
+// ✅ Kodu göndər
+sendBtn.addEventListener("click", async () => {
+  const email = emailInput.value.trim().toLowerCase();
+
+  if (!email) return alert("Email daxil edin!");
+
+  try {
+    setSendState(true, "Göndərilir...");
+
+    // ✅ Firestore-da email var?
+    const q = query(collection(db, "users"), where("email", "==", email));
+    const snap = await getDocs(q);
+
+    if (snap.empty) {
+      alert("Bu email qeydiyyatdan keçməyib!");
+      window.location.href = "qeydiyyat.html";
+      return;
+    }
+
+    await sendOtp(email);
+
+  } catch (err) {
+    console.error(err);
+    alert("Xəta: " + (err?.message || "OTP göndərilmədi"));
+  } finally {
+    setSendState(false, "Kodu Göndər");
+  }
+});
+
+// ✅ Yenidən göndər
+resendBtn.addEventListener("click", async () => {
+  const email = emailInput.value.trim().toLowerCase();
+  if (!email) return;
+
+  try {
+    resendBtn.style.display = "none";
+    await sendOtp(email);
+    alert("Yeni OTP göndərildi ✅");
+  } catch (err) {
+    console.error(err);
+    alert("OTP göndərilmədi ❌");
+    resendBtn.style.display = "block";
+  }
+});
+
+// ✅ Yoxla
+verifyBtn.addEventListener("click", () => {
+  const entered = otpInputs.map(i => i.value).join("");
+
+  if (Date.now() > otpExpireTime) return alert("OTP vaxtı bitib!");
+  if (entered !== generatedCode) return alert("OTP səhvdir!");
+
+  const email = emailInput.value.trim().toLowerCase();
+  localStorage.setItem("loggedInEmail", email);
+
+  alert("Doğrulama uğurludur!");
+  window.location.href = "https://typingmasteraz.github.io/ayda/account.html";
+});
+</script>
+
+</body>
+</html>

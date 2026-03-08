@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hesab Məlumatları</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Poppins, Arial, sans-serif;
+      background: #0f172a;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .card {
+      background: #020617;
+      padding: 28px;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 360px;
+      box-shadow: 0 20px 40px rgba(0,0,0,.5);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 22px;
+      text-align: center;
+    }
+
+    .info {
+      background: #020617;
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .label {
+      font-size: 13px;
+      color: #94a3b8;
+    }
+
+    .value {
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    input {
+      width: 300px;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #1e293b;
+      background: #020617;
+      color: #fff;
+      font-size: 15px;
+      outline: none;
+      margin-top: 6px;
+    }
+
+    input:focus {
+      border-color: #2563eb;
+      width: 300px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .edit {
+      background: #facc15;
+      color: #422006;
+    }
+
+    .save {
+      background: #22c55e;
+      color: #022c22;
+      display: none;
+    }
+
+    .back {
+      background: #2563eb;
+      color: #fff;
+    }
+
+    .logout {
+      background: #dc2626;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>Hesab Məlumatları</h1>
+
+    <!-- AD -->
+    <div class="info">
+      <div class="label">Ad</div>
+      <div class="value" id="nameText"></div>
+      <input type="text" id="nameInput" style="display:none;">
+    </div>
+
+    <!-- SOYAD -->
+    <div class="info">
+      <div class="label">Soyad</div>
+      <div class="value" id="surnameText"></div>
+      <input type="text" id="surnameInput" style="display:none;">
+    </div>
+
+    <button class="edit" id="editBtn">Redaktə et</button>
+    <button class="save" id="saveBtn">Yadda saxla</button>
+
+    <button class="back" onclick="window.location.href='https://typingmasteraz.github.io/ayda/index.html'">
+      Davam et
+    </button>
+
+    <button class="logout" id="logoutBtn">
+      Məlumatları sil
+    </button>
+  </div>
+
+ <script>
+  
+  const nameText = document.getElementById("nameText");
+  const surnameText = document.getElementById("surnameText");
+  const nameInput = document.getElementById("nameInput");
+  const surnameInput = document.getElementById("surnameInput");
+  const editBtn = document.getElementById("editBtn");
+  const saveBtn = document.getElementById("saveBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  // 1) Login email yoxlanır
+  const email = localStorage.getItem("loggedInEmail");
+  if (!email) {
+    window.location.href = "https://typingmasteraz.github.io/ayda/daxil%20ol.html";
+  }
+
+  // 2) Email-ə bağlı məlumat oxunur
+  function getUserData() {
+    const raw = localStorage.getItem("userData_" + email);
+    return raw ? JSON.parse(raw) : null;
+  }
+
+  function renderViewMode(userData) {
+    nameText.textContent = userData?.name || "Məlumat yoxdur";
+    surnameText.textContent = userData?.surname || "Məlumat yoxdur";
+
+    nameText.style.display = "block";
+    surnameText.style.display = "block";
+    nameInput.style.display = "none";
+    surnameInput.style.display = "none";
+
+    editBtn.style.display = "block";
+    saveBtn.style.display = "none";
+  }
+
+  function renderEditMode(userData) {
+    nameInput.value = userData?.name || "";
+    surnameInput.value = userData?.surname || "";
+
+    nameText.style.display = "none";
+    surnameText.style.display = "none";
+    nameInput.style.display = "block";
+    surnameInput.style.display = "block";
+
+    editBtn.style.display = "none";
+    saveBtn.style.display = "block";
+  }
+
+  // 3) Əgər məlumat yoxdursa → adiviyaz.html (səndə bu səhifə adiviyaz idi)
+  let userData = getUserData();
+  if (!userData) {
+    window.location.href = "adiviyaz.html";
+  }
+
+  // 4) Səhifə açılan kimi məlumatı göstər
+  renderViewMode(userData);
+
+  // ✏️ Edit
+  editBtn.addEventListener("click", () => {
+    userData = getUserData();
+    renderEditMode(userData);
+  });
+
+  // 💾 Save (yenilə)
+  saveBtn.addEventListener("click", () => {
+    const newName = nameInput.value.trim();
+    const newSurname = surnameInput.value.trim();
+
+    if (!newName || !newSurname) {
+      alert("Ad və soyad boş ola bilməz!");
+      return;
+    }
+
+    const updated = { name: newName, surname: newSurname };
+    localStorage.setItem("userData_" + email, JSON.stringify(updated));
+
+    alert("Məlumatlar yeniləndi ✅");
+
+    userData = updated;
+    renderViewMode(userData);
+  });
+
+  // 🗑️ Sil (logout / delete)
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("userData_" + email);
+    localStorage.removeItem("loggedInEmail");
+
+    alert("Məlumatlar silindi 🗑️");
+    window.location.href = "https://typingmasteraz.github.io/ayda/daxil%20ol.html";
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Google ilə qeydiyyat</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body{
+      display:flex;
+      flex-direction:row;
+      gap:10px;
+      margin:0;
+      height:100vh;
+      overflow:hidden;
+      font-family:'Poppins', sans-serif;
+    }
+    .esas{
+      background-color:aqua;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      align-items:center;
+      height:100vh;
+      width:50%;
+      justify-content:center;
+    }
+    h2{
+      text-align:center;
+      font-weight:600;
+      padding:0 20px;
+      margin:5px;
+      padding-bottom:40px;
+    }
+    button{
+      border-radius:20px;
+      font-family:'Poppins', sans-serif;
+      transition:0.3s ease;
+      border:none;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding:15px 25px;
+      font-size:18px;
+      width:220px;
+    }
+    button:hover{
+      background-color:aquamarine;
+      transform:scale(1.05);
+    }
+    button img{
+      width:26px;
+      height:26px;
+    }
+    h4{
+      font-weight:400;
+      margin-top:10px;
+    }
+    h4 a{
+      text-decoration:none;
+      color:chocolate;
+      font-weight:600;
+    }
+    .picture{
+      width:50%;
+      height:100vh;
+    }
+    .picture img{
+      width:100%;
+      height:100vh;
+      object-fit:cover;
+    }
+  </style>
+
+  <script type="module">
+    // ✅ Firebase imports (CDN)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-firestore.js";
+
+    // ✅ SƏNİN YENİ FIREBASE CONFIG (salam-58d0a)
+    const firebaseConfig = {
+      apiKey: "AIzaSyCYWC8P0meXFbyRoSA4uHkJmJRkPFlhwSQ",
+      authDomain: "salam-58d0a.firebaseapp.com",
+      projectId: "salam-58d0a",
+      storageBucket: "salam-58d0a.firebasestorage.app",
+      messagingSenderId: "703442504339",
+      appId: "1:703442504339:web:f9a6b1f54db80c4c829b66",
+      measurementId: "G-G1QX2TVF0C"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    // ✅ Düymə disable/enable üçün helper
+    function setBtnState(disabled, text) {
+      const btn = document.getElementById("googleBtn");
+      if (!btn) return;
+      btn.disabled = disabled;
+      btn.style.opacity = disabled ? "0.7" : "1";
+      btn.style.cursor = disabled ? "not-allowed" : "pointer";
+      if (text) btn.querySelector("span").textContent = text;
+    }
+
+    // ✅ Google login funksiyası
+    window.googleLogin = async function () {
+      try {
+        setBtnState(true, "Gözləyin...");
+
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+
+        if (!user) throw new Error("User tapılmadı.");
+
+        // ✅ users/{uid}
+        const userRef = doc(db, "users", user.uid);
+        const snap = await getDoc(userRef);
+
+        // Əgər user artıq varsa, sadəcə yönləndir
+        if (snap.exists()) {
+          localStorage.setItem("loggedInEmail", user.email || "");
+          localStorage.setItem("loggedInUid", user.uid);
+          window.location.href = "https://typingmasteraz.github.io/ayda/daxil%20ol.html";
+          return;
+        }
+
+        // ✅ İlk dəfədirsə — Firestore-a yaz
+        await setDoc(userRef, {
+          uid: user.uid,
+          email: user.email || "",
+          name: user.displayName || "",
+          photoURL: user.photoURL || "",
+          provider: "google",
+          createdAt: serverTimestamp()
+        });
+
+        localStorage.setItem("loggedInEmail", user.email || "");
+        localStorage.setItem("loggedInUid", user.uid);
+
+        alert("Qeydiyyat uğurla tamamlandı!");
+        window.location.href = "https://typingmasteraz.github.io/ayda/adiviyaz.html";
+
+      } catch (error) {
+        console.error(error);
+        alert("Xəta: " + (error?.message || "Naməlum xəta"));
+      } finally {
+        setBtnState(false, "Google ilə Qeydiyyat");
+      }
+    };
+  </script>
+</head>
+
+<body>
+  <div class="esas">
+    <h2>TypingMaster ilə sürətli, dəqiq və peşəkar klaviatura yazma bacarığını inkişaf etdir!</h2>
+
+    <button id="googleBtn" onclick="googleLogin()">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+      <span>Google ilə Qeydiyyat</span>
+    </button>
+
+    <div class="daxil-ol">
+      <h4>Hesabın var? <a href="daxil ol.html">Daxil ol</a></h4>
+    </div>
+  </div>
+
+  <div class="picture">
+    <img src="https://cdn.mos.cms.futurecdn.net/3kQCtpnfHoUq5cBsLqKTFk.jpg" alt="cover">
+  </div>
+</body>
+</html>
