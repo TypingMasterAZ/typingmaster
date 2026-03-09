@@ -627,14 +627,15 @@ h1{margin-right:30px;}
     // State
     let settings = { count: parseInt(el('wordCount')?.value || 30) };
     let state = {
-      words: [],
-      index: 0,
-      correct: 0,
-      wrong: 0,
-      startTime: null,
-      finished: false,
-      perWord: []
-    };
+  words: [],
+  index: 0,
+  correct: 0,
+  wrong: 0,
+  startTime: null,
+  finished: false,
+  perWord: [],
+  started: false
+};
     let timerInterval = null;
 
     function pickWords(n){
@@ -761,25 +762,49 @@ h1{margin-right:30px;}
       `;
       box.appendChild(summary);
     }
+    function preparePreview(){
+  settings.count = parseInt(el('wordCount').value);
+  state.words = pickWords(settings.count);
+  state.index = 0;
+  state.correct = 0;
+  state.wrong = 0;
+  state.perWord = [];
+  state.finished = false;
+  state.started = false;
+  state.startTime = null;
 
+  el('typingInput').value = '';
+  el('typingInput').disabled = true;
+
+  el('timer').textContent = '00:00';
+  el('wpm').textContent = '0 WPM';
+
+  renderStream();
+  updateStats();
+  renderResultList();
+}
     function startTest(){
-      settings.count = parseInt(el('wordCount').value);
-      state.words = pickWords(settings.count);
-      state.index = 0;
-      state.correct = 0;
-      state.wrong = 0;
-      state.perWord = [];
-      state.finished = false;
+  settings.count = parseInt(el('wordCount').value);
+  state.words = pickWords(settings.count);
+  state.index = 0;
+  state.correct = 0;
+  state.wrong = 0;
+  state.perWord = [];
+  state.finished = false;
+  state.started = true;
 
-      el('typingInput').value = '';
-      el('typingInput').disabled = false;
-      el('typingInput').focus();
+  el('typingInput').value = '';
+  el('typingInput').disabled = false;
+  el('typingInput').focus();
 
-      renderStream();
-      updateStats();
-      startTimer();
-      renderResultList();
-    }
+  el('timer').textContent = '00:00';
+  el('wpm').textContent = '0 WPM';
+
+  renderStream();
+  updateStats();
+  startTimer();
+  renderResultList();
+}
     
 
     function finishTest(){
@@ -787,7 +812,9 @@ h1{margin-right:30px;}
   el('typingInput').disabled = true;
   stopTimer();
 
+  if (typeof saveTypingResult === "function") {
   saveTypingResult(state.correct, state.wrong, calcWPM());
+}
 
   renderDetailedResults();
   showModal();
@@ -795,30 +822,31 @@ h1{margin-right:30px;}
     
 
     function handleInput(e){
-      if(state.finished) return;
+  if (!state.started) return;
+  if(state.finished) return;
 
-      if(e.target.value.endsWith(' ')){
-        const typed = e.target.value.trim();
-        const word = state.words[state.index];
-        const correct = typed === word;
+  if(e.target.value.endsWith(' ')){
+    const typed = e.target.value.trim();
+    const word = state.words[state.index];
+    const correct = typed === word;
 
-        state.perWord[state.index] = {word, typed, correct};
-        correct ? state.correct++ : state.wrong++;
-        state.index++;
+    state.perWord[state.index] = {word, typed, correct};
+    correct ? state.correct++ : state.wrong++;
+    state.index++;
 
-        e.target.value = '';
+    e.target.value = '';
 
-        if(state.index >= state.words.length){
-          finishTest();
-        }
-
-        renderStream();
-        updateStats();
-        renderResultList();
-      } else {
-        renderStream();
-      }
+    if(state.index >= state.words.length){
+      finishTest();
     }
+
+    renderStream();
+    updateStats();
+    renderResultList();
+  } else {
+    renderStream();
+  }
+}
 
     el('typingInput').addEventListener('input', handleInput);
     el('startBtn').addEventListener('click', () => {
@@ -828,27 +856,26 @@ h1{margin-right:30px;}
   }
   startTest();
 });
-    el('resetBtn').addEventListener('click', () => {
+el('resetBtn').addEventListener('click', () => {
   if (!isUserLoggedIn()) {
+    preparePreview();
     openAuthModal();
     return;
   }
-  startTest();
+  preparePreview();
 });
-    el('wordCount').addEventListener('change', () => {
+el('wordCount').addEventListener('change', () => {
   if (!isUserLoggedIn()) {
+    preparePreview();
     openAuthModal();
     return;
   }
-  startTest();
+  preparePreview();
 });
     el('closeModal').addEventListener('click', closeModal);
 
-    if (isUserLoggedIn()) {
-  startTest();
-} else {
-  el('typingInput').disabled = true;
-}
+preparePreview();
+el('typingInput').disabled = true;
     if (typeof saveVisitorEntry === "function") {
   saveVisitorEntry();
 } else {
