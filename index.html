@@ -949,21 +949,34 @@ window.saveTypingResult = async function(correct, wrong, wpm) {
 
 window.saveVisitorEntry = async function() {
   try {
-    const sessionKey = "typingmaster_visit_saved";
+    const user = auth.currentUser;
+    const savedEmail = localStorage.getItem("userEmail");
+    const savedUsername = localStorage.getItem("username");
+
+    const finalEmail = user?.email || savedEmail;
+    const finalName = user?.displayName || savedUsername || (finalEmail ? finalEmail.split("@")[0] : null);
+
+    // Login olmayanı visitors-a yazma
+    if (!finalEmail) {
+      console.log("İstifadəçi tanınmadı, visitors-a yazılmadı");
+      return;
+    }
+
+    // Hər istifadəçi üçün ayrıca session key
+    const sessionKey = "typingmaster_visit_saved_" + finalEmail;
 
     if (sessionStorage.getItem(sessionKey)) return;
 
-    const user = auth.currentUser;
-
     await addDoc(collection(db, "visitors"), {
-      email: user?.email || localStorage.getItem("userEmail") || "anonim",
+      email: finalEmail,
+      name: finalName || "Naməlum",
       page: "home",
       visitedAt: serverTimestamp(),
       userAgent: navigator.userAgent
     });
 
     sessionStorage.setItem(sessionKey, "1");
-    console.log("✅ ziyarətçi Firestore-a yazıldı");
+    console.log("✅ ziyarətçi Firestore-a ad/email ilə yazıldı");
   } catch (err) {
     console.error("❌ ziyarətçi yazılmadı:", err);
   }
