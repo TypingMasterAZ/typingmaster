@@ -687,18 +687,29 @@ h1{margin-right:30px;}
       el('wpm').textContent = calcWPM() + ' WPM';
     }
 
-    function startTimer(){
+    function startTimer() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+
+  state.startTime = Date.now();
+
+  timerInterval = setInterval(() => {
+    if (!state.started || state.finished || !state.startTime) {
       clearInterval(timerInterval);
-      state.startTime = Date.now();
-      timerInterval = setInterval(()=>{
-        const sec = Math.floor((Date.now()-state.startTime)/1000);
-        el('timer').textContent =
-          String(Math.floor(sec/60)).padStart(2,'0') + ':' +
-          String(sec%60).padStart(2,'0');
-        el('wpm').textContent = calcWPM() + ' WPM';
-      },500);
+      timerInterval = null;
+      el('timer').textContent = '00:00';
+      return;
     }
-    function stopTimer() {
+
+    const sec = Math.floor((Date.now() - state.startTime) / 1000);
+    el('timer').textContent =
+      String(Math.floor(sec / 60)).padStart(2, '0') + ':' +
+      String(sec % 60).padStart(2, '0');
+
+    el('wpm').textContent = calcWPM() + ' WPM';
+  }, 500);
+}
+function stopTimer() {
   clearInterval(timerInterval);
   timerInterval = null;
 }
@@ -872,15 +883,16 @@ el('resetBtn').addEventListener('click', () => {
     openAuthModal();
     return;
   }
-  startTest();
+  preparePreview();
 });
+
 el('wordCount').addEventListener('change', () => {
   if (!isUserLoggedIn()) {
     preparePreview();
     openAuthModal();
     return;
   }
-  startTest();
+  preparePreview();
 });
     el('closeModal').addEventListener('click', closeModal);
 
