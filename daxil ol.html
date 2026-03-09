@@ -64,7 +64,7 @@ button:hover{background:green;color:#fff;transform:scale(1.05)}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js";
-import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-firestore.js";
+import { getFirestore, collection, query, where, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-firestore.js";
 
 // ✅ YENİ Firebase (salam-58d0a)
 const firebaseConfig = {
@@ -203,20 +203,34 @@ resendBtn.addEventListener("click", async () => {
 });
 
 // ✅ Yoxla
-verifyBtn.addEventListener("click", () => {
+verifyBtn.addEventListener("click", async () => {
   const entered = otpInputs.map(i => i.value).join("");
 
   if (Date.now() > otpExpireTime) return alert("OTP vaxtı bitib!");
   if (entered !== generatedCode) return alert("OTP səhvdir!");
 
   const email = emailInput.value.trim().toLowerCase();
-  localStorage.setItem("loggedInEmail", email);
 
-  alert("Doğrulama uğurludur!");
-  window.location.href = "account.html";
+  try {
+    // localStorage-a yaz
+    localStorage.setItem("userEmail", email);
+
+    // Firestore-a yaz
+    await addDoc(collection(db, "enteredEmails"), {
+      email: email,
+      loginType: "otp",
+      createdAt: serverTimestamp()
+    });
+
+    alert("Doğrulama uğurludur!");
+    window.location.href = "account.html";
+  } catch (err) {
+    console.error("Firestore yazılmadı:", err);
+    alert("Giriş oldu, amma databazaya yazılmadı.");
+    window.location.href = "account.html";
+  }
 });
 </script>
 
 </body>
-
 </html>
