@@ -514,6 +514,21 @@ h1{margin-right:30px;}
        (adsbygoogle = window.adsbygoogle || []).push({});
   </script>
 </div>
+<!-- Qeydiyyat xəbərdarlıq paneli -->
+<div id="authModal" class="modal" style="display:none" role="dialog" aria-modal="true">
+  <div class="modal-card" style="max-width:520px">
+    <h2>Qeydiyyat tələb olunur</h2>
+    <p style="margin:8px 0 0 0;color:var(--muted);line-height:1.6">
+      Oyuna başlamaq üçün əvvəlcə qeydiyyatdan keçməlisən və ya hesabına daxil olmalısan.
+    </p>
+
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap">
+      <button class="ghost" id="closeAuthModal">Bağla</button>
+      <button id="goLoginBtn">Daxil ol</button>
+      <button id="goRegisterBtn">Qeydiyyat</button>
+    </div>
+  </div>
+</div>
 
   <script>
     const WORDS = (`salam salamlar komputer kitab internet proqramlaşdırma javascript html css dizayn sürət təcrübə yazmaq düzgün səhv oyun funksiya dəyişən massiv düzbucaqlı tənlik riyaziyyat tarix coğrafiya elm musiqi film sosial media kitabxana universitet alma bal su qapı pəncərə kitab çanta dost yol işıq ev oyun yaz gül dərs telefon kompüter şəkil masa saat məktəb müəllim təcrübə dəftər`).split(' ');
@@ -569,6 +584,44 @@ h1{margin-right:30px;}
       if (e.key === "Escape" && contentModal.classList.contains("active")) {
         closeContentModal();
       }
+    });
+        // Auth modal
+    const authModal = document.getElementById("authModal");
+    const closeAuthModalBtn = document.getElementById("closeAuthModal");
+    const goRegisterBtn = document.getElementById("goRegisterBtn");
+    const goLoginBtn = document.getElementById("goLoginBtn");
+
+    function isUserLoggedIn() {
+      const savedEmail = localStorage.getItem("userEmail");
+      return !!savedEmail;
+    }
+
+    function openAuthModal() {
+  authModal.style.display = "flex";
+  document.body.classList.add("modal-open");
+  el('typingInput').disabled = true;
+}
+
+    function closeAuthModal() {
+  authModal.style.display = "none";
+  document.body.classList.remove("modal-open");
+
+  if (!isUserLoggedIn()) {
+    el('typingInput').disabled = true;
+  }
+}
+    closeAuthModalBtn.addEventListener("click", closeAuthModal);
+
+    authModal.addEventListener("click", (e) => {
+      if (e.target === authModal) closeAuthModal();
+    });
+
+    goRegisterBtn.addEventListener("click", () => {
+      window.location.href = "qeydiyyat.html";
+    });
+
+    goLoginBtn.addEventListener("click", () => {
+      window.location.href = "daxil ol.html";
     });
 
     // State
@@ -658,7 +711,17 @@ h1{margin-right:30px;}
     }
 
     function showModal(){ el('modal').style.display = 'flex'; }
-    function closeModal(){ el('modal').style.display = 'none'; startTest(); }
+    function closeModal(){
+  el('modal').style.display = 'none';
+
+  if (!isUserLoggedIn()) {
+    el('typingInput').disabled = true;
+    openAuthModal();
+    return;
+  }
+
+  startTest();
+}
 
     function renderDetailedResults(){
       const box = document.getElementById("detailedResults");
@@ -758,12 +821,34 @@ h1{margin-right:30px;}
     }
 
     el('typingInput').addEventListener('input', handleInput);
-    el('startBtn').addEventListener('click', startTest);
-    el('resetBtn').addEventListener('click', startTest);
-    el('wordCount').addEventListener('change', startTest);
+    el('startBtn').addEventListener('click', () => {
+  if (!isUserLoggedIn()) {
+    openAuthModal();
+    return;
+  }
+  startTest();
+});
+    el('resetBtn').addEventListener('click', () => {
+  if (!isUserLoggedIn()) {
+    openAuthModal();
+    return;
+  }
+  startTest();
+});
+    el('wordCount').addEventListener('change', () => {
+  if (!isUserLoggedIn()) {
+    openAuthModal();
+    return;
+  }
+  startTest();
+});
     el('closeModal').addEventListener('click', closeModal);
 
-    startTest();
+    if (isUserLoggedIn()) {
+  startTest();
+} else {
+  el('typingInput').disabled = true;
+}
     if (typeof saveVisitorEntry === "function") {
   saveVisitorEntry();
 } else {
