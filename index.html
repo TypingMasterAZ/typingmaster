@@ -698,7 +698,10 @@ h1{margin-right:30px;}
         el('wpm').textContent = calcWPM() + ' WPM';
       },500);
     }
-    function stopTimer(){ clearInterval(timerInterval); }
+    function stopTimer() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+}
 
     function renderResultList(){
       const list = el('resultList');
@@ -762,7 +765,10 @@ h1{margin-right:30px;}
       `;
       box.appendChild(summary);
     }
-    function preparePreview(){
+   function preparePreview() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+
   settings.count = parseInt(el('wordCount').value);
   state.words = pickWords(settings.count);
   state.index = 0;
@@ -783,7 +789,10 @@ h1{margin-right:30px;}
   updateStats();
   renderResultList();
 }
-    function startTest(){
+  function startTest() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+
   settings.count = parseInt(el('wordCount').value);
   state.words = pickWords(settings.count);
   state.index = 0;
@@ -792,6 +801,7 @@ h1{margin-right:30px;}
   state.perWord = [];
   state.finished = false;
   state.started = true;
+  state.startTime = null;
 
   el('typingInput').value = '';
   el('typingInput').disabled = false;
@@ -862,7 +872,7 @@ el('resetBtn').addEventListener('click', () => {
     openAuthModal();
     return;
   }
-  preparePreview();
+  startTest();
 });
 el('wordCount').addEventListener('change', () => {
   if (!isUserLoggedIn()) {
@@ -870,7 +880,7 @@ el('wordCount').addEventListener('change', () => {
     openAuthModal();
     return;
   }
-  preparePreview();
+  startTest();
 });
     el('closeModal').addEventListener('click', closeModal);
 
